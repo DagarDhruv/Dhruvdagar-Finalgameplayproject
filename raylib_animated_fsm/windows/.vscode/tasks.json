@@ -1,0 +1,182 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build All (Windows - Debug)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh all debug"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "Build all targets in Debug mode."
+		},
+		{
+			"label": "Build (Windows - Debug)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh build debug"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"detail": "Build the project in Debug mode."
+		},
+		{
+			"label": "Run (Windows)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh run debug"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "Run the desktop version of the application in Debug mode."
+		},
+		{
+			"label": "Build Web (Windows)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh build_web"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "Build the web application."
+		},
+		{
+			"label": "Run Web (Windows)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh run_web"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "test",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "Run the web application (starts local server)."
+		},
+		{
+			"label": "Clean (Windows)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh clean"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "Clean the project build files."
+		},
+		{
+			"label": "Clean Toolchain (Windows)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh clean_toolchain"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [],
+			"detail": "Clean the toolchain files."
+		},
+		{
+			"label": "Build Release (Windows)",
+			"type": "process",
+			"command": "C:\\msys64\\msys2_shell.cmd",
+			"args": [
+				"-ucrt64",
+				"-defterm",
+				"-here",
+				"-no-start",
+				"-c",
+				"bash ./windows/.vscode/build.sh build release"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/.."
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"detail": "Build the project in Release mode."
+		}
+	]
+}

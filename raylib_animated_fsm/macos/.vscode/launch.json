@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (MacOS)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../debug/game.bin",  // Move up one level to access the debug folder
+            "cwd": "${workspaceFolder}/..",  // Set the working directory to the parent of the workspace
+            "MIMode": "lldb",
+            "preLaunchTask": "Build (MacOS - Debug)"
+        },
+        {
+            "name": "Release (MacOS)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../release/game.bin",  // Move up one level to access the release folder
+            "cwd": "${workspaceFolder}/..",  // Set the working directory to the parent of the workspace
+            "MIMode": "lldb",
+            "preLaunchTask": "Build (MacOS - Release)"
+        }
+    ]
+}

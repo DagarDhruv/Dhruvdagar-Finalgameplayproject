@@ -1,0 +1,126 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build All (Linux - Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["all", "debug"],
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "detail": "Build all targets in Debug mode."
+        },
+        {
+            "label": "Build (Linux - Debug)",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["build", "debug"],  // Run the build command in Debug mode
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Build the project in Debug mode."
+        },
+        {
+            "label": "Run (Linux)",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["run", "debug"],  // Run the application in Debug mode
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Run the desktop version of the application in Debug mode."
+        },
+        {
+            "label": "Build Web",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["build_web"],  // Command to build the web application
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Build the web application."
+        },
+        {
+            "label": "Run Web",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["run_web"],  // Command to run the web application
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Run the web application (starts local server)."
+        },
+        {
+            "label": "Clean (Linux)",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["clean"],  // Clean the project build files
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Clean the project build files."
+        },
+        {
+            "label": "Clean Toolchain (Linux)",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["clean_toolchain"],  // Command to clean the toolchain files
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Clean the toolchain files."
+        },
+        {
+            "label": "Build Release (Linux)",
+            "type": "shell",
+            "command": "${workspaceFolder}/.vscode/build.sh",
+            "args": ["build", "release"],  // Command to build the release version
+            "options": {
+                "cwd": "${workspaceFolder}/.."
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Build the project in Release mode."
+        }
+    ]
+}
+

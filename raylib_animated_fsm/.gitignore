@@ -1,0 +1,29 @@
+# Log files
+*.log
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
+
+# Bin dir
+/debug/
+/release/
+
+# Web dir
+/web/
+
+# Ignore submodule directories
+raylib_starter/
+cute_headers/
+
+# Object files
+*.o

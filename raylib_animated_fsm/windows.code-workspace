@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{ "name": "Root", "path": "." },
+        { "name": "Source Code", "path": "src" },
+		{ "name": "Header Files", "path": "include" },
+		{ "name": "Debug Build", "path": "debug" },
+		{ "name": "Release Build", "path": "release" },
+		{ "name": "Web Build", "path": "web" },
+		{ "name": "Web Template", "path": "template" },
+		{ "name": "Windows Config", "path": "windows" }
+	],
+	"settings": {
+		"files.exclude": {
+			"**/linux": true,
+			"**/macos": true,
+			"**/.gitmodules": true,
+			"**/objects": true,
+			"**/linux.code-workspace": true,
+			"**/macos.code-workspace": true
+		},
+        "terminal.integrated.cwd": "${workspaceFolder:Root}",
+        "cmake.ignoreCMakeListsMissing": true
+	},
+	"extensions": {
+		"recommendations": [
+			"ms-vscode.cpptools",
+			"ms-vscode.cpptools-themes"
+		]
+	}
+}

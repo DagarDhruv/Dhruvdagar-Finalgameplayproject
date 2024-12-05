@@ -1,0 +1,53 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (Windows)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../debug/game.exe",  // Path to the debug executable
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/..",
+            "environment": [],
+            "externalConsole": true,  // Change to false if you want to use the integrated console
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build (Windows - Debug)",  // Ensure this build task is defined
+            "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",  // Path to GDB
+            "logging": {
+                "engineLogging": true  // Useful for debugging issues
+            }
+        },
+        {
+            "name": "Release (Windows)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../release/game.exe",  // Path to the release executable
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/..",
+            "environment": [],
+            "externalConsole": true,  // Change to false if you want to use the integrated console
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build (Windows - Release)",  // Ensure this build task is defined
+            "miDebuggerPath": "C:\\msys64\\ucrt64\\bin\\gdb.exe",  // Path to GDB
+            "logging": {
+                "engineLogging": true  // Useful for debugging issues
+            }
+        }
+    ]
+}
