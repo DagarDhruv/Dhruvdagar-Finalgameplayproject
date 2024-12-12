@@ -131,6 +131,9 @@ Command PollInput()
         return COMMAND_COLLISION_START;
     if (IsKeyPressed(KEY_O))
         return COMMAND_COLLISION_END;
+    if (IsKeyPressed(KEY_M))
+        return COMMAND_SHIELD;
+
 
     // No input detected, return no command
     return COMMAND_NONE;

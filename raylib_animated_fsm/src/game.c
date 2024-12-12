@@ -143,7 +143,9 @@ void DrawGame(GameData *gameData)
     // Draw some basic UI text (game title and description)
     DrawText("Welcome to Raylib Animated FSM Starter", 190, 200, 20, LIGHTGRAY);
     DrawText("Gameplay Programming I", 190, 220, 20, LIGHTGRAY);
-
+    const char *livesText = TextFormat("%d", gameData->player->lives);
+    DrawText("LIVES:", 610, 23, 20, DARKBLUE);
+    DrawText(livesText, 690, 23, 20, DARKBLUE);
     // Drawing Player and Position Data
     const char *infoPosition = TextFormat("(%.f, %.f)", gameData->player->base.position.x, gameData->player->base.position.y);
 

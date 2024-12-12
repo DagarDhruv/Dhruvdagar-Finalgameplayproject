@@ -30,7 +30,7 @@ typedef enum
     EVENT_RESPAWN, // Represents the player respawning after death (e.g., after a timeout, or at a checkpoint).
     // EVENT_HURT,    // Represents the player character taking damage (e.g., from enemies, traps, or environmental hazards).
     // EVENT_HEAL,    // Represents the player character receiving healing (e.g., health items or regenerative effects).
-
+    EVENT_SHIELD,
     // Collision Events:
     EVENT_COLLISION_START, // Represents the start of a collision (e.g., player colliding with a wall, enemy, or object).
     EVENT_COLLISION_END,   // Represents the end of a collision (e.g., player moving away from a colliding object or enemy).

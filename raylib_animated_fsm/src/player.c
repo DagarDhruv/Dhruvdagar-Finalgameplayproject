@@ -49,6 +49,7 @@ Player *InitPlayer(const char *name)
     // Player Specific Data
     player->stamina = 100.0f;
     player->mana = 100.0f;
+    player->lives = 4;  // Set initial lives to 4
 
     // Init the Player FSM
     InitPlayerFSM(&player->base);
@@ -103,7 +104,7 @@ void InitPlayerFSM(GameObject *obj)
 
     // ---- STATE_IDLE state configuration ----
     // Define valid transitions from STATE_IDLE
-    State idleValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN,STATE_MOVING_UP_LEFT,STATE_MOVING_UP_RIGHT,STATE_MOVING_DOWN_LEFT,STATE_MOVING_DOWN_RIGHT,STATE_MAGIC};
+    State idleValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN,STATE_MOVING_UP_LEFT,STATE_MOVING_UP_RIGHT,STATE_MOVING_DOWN_LEFT,STATE_MOVING_DOWN_RIGHT,STATE_SHIELD};
 
     // Set up the state configuration for STATE_IDLE
     obj->stateConfigs[STATE_IDLE].name = "Player_Idle";
@@ -198,6 +199,15 @@ void InitPlayerFSM(GameObject *obj)
     obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Update = PlayerUpdateWalking;
     obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Exit = PlayerExitWalking;
     StateTransitions(&obj->stateConfigs[STATE_MOVING_DOWN_RIGHT], movingDownRightValidTransitions, sizeof(movingDownRightValidTransitions) / sizeof(State));
+ //for shield
+    State shieldValidTransitions[] = {STATE_IDLE, STATE_DEAD};
+    obj->stateConfigs[STATE_SHIELD].name = "Player_Shield";
+    obj->stateConfigs[STATE_SHIELD].HandleEvent = PlayerShieldHandleEvent;
+    obj->stateConfigs[STATE_SHIELD].Entry = PlayerEnterShield;
+    obj->stateConfigs[STATE_SHIELD].Update = PlayerUpdateShield;
+    obj->stateConfigs[STATE_SHIELD].Exit = PlayerExitShield;
+    StateTransitions(&obj->stateConfigs[STATE_SHIELD], shieldValidTransitions, sizeof(shieldValidTransitions) / sizeof(State));
+
     // ---- STATE_ATTACKING state configuration ----
     // Define valid transitions from STATE_ATTACKING
     State attackValidTransitions[] = {STATE_IDLE, STATE_DEAD};
@@ -317,6 +327,9 @@ void PlayerIdleHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_DOWN_LEFT:
             ChangeState(obj,STATE_MOVING_DOWN_LEFT);
             break;
+        case EVENT_SHIELD:
+            ChangeState(obj, STATE_SHIELD);
+            break;
     }
 }
 
@@ -373,6 +386,8 @@ void PlayerWalkingHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_DOWN_LEFT:
             ChangeState(obj,STATE_MOVING_DOWN_LEFT);
             break;
+        case EVENT_SHIELD:
+            break;
     }
 }
 
@@ -418,6 +433,8 @@ void PlayerAttackingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_DOWN_LEFT:
             break;
+        case EVENT_SHIELD:
+            break;
     }
 }
 
@@ -462,6 +479,8 @@ void PlayerShieldingHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_DOWN_RIGHT:
             break;
         case EVENT_MOVE_DOWN_LEFT:
+            break;
+        case EVENT_SHIELD:
             break;
     }
 }
@@ -779,6 +798,9 @@ void PlayerUpdateWalking(GameObject *obj) {
     // Update animation frames
     UpdateAnimation(&obj->animation);
 
+    if (player->base.health <= 0 || player->base.position.y > GetScreenHeight() + 100) {
+        ChangeState(obj, STATE_DEAD);
+    }
     // Return to idle if animation completes
     if (obj->animation.currentFrame == obj->animation.frameCount - 1) {
         ChangeState(obj, STATE_IDLE);
@@ -863,15 +885,32 @@ void PlayerExitShielding(GameObject *obj)
 void PlayerEnterDie(GameObject *obj)
 {
     printf("\n%s -> ENTER -> Die\n", obj->name);
-    // Complete the remainder of the method
+    Player *player = (Player *)obj;
+    Rectangle deadFrames[6] = {
+            {0, 1280, 64, 64}, {64, 1280, 64, 64},
+            {128, 1280, 64, 64}, {192, 1280, 64, 64},
+            {256, 1280, 64, 64}, {320, 1280, 64, 64}
+    };
+    InitGameObjectAnimation(&player->base, deadFrames, 6, 0.2f);
 }
 
 void PlayerUpdateDie(GameObject *obj)
 {
+    Player *player = (Player *)obj;
     printf("\n%s -> UPDATE -> Die\n", obj->name);
-    ChangeState(obj, STATE_RESPAWN);
-    // Complete the remainder of the method
     UpdateAnimation(&obj->animation);
+    if (obj->animation.currentFrame >= obj->animation.frameCount - 1) {
+        player->lives--;
+
+        if (player->lives > 0) {
+            ChangeState(obj, STATE_RESPAWN);
+        } else {
+            // Game Over logic here
+            player->base.position = player->spawnPoint;
+            player->lives = 4;  // Reset lives for new game
+            ChangeState(obj, STATE_IDLE);
+        }
+    }
 }
 
 void PlayerExitDie(GameObject *obj)
@@ -882,20 +921,88 @@ void PlayerExitDie(GameObject *obj)
 
 void PlayerEnterRespawn(GameObject *obj)
 {
-    printf("\n%s -> ENTER -> Respawn\n", obj->name);
-    // Complete the remainder of the method
+    Player *player = (Player *)obj;
+    // Reset position and stats
+    player->base.position = (Vector2){GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
+    player->base.health = 100;
+    player->stamina = 100;
+    player->mana = 100;
+
+    Rectangle respawnFrames[8] = {
+            {0, 384, 64, 64}, {64, 384, 64, 64},
+            {128, 384, 64, 64}, {192, 384, 64, 64},
+            {256, 384, 64, 64}, {320, 384, 64, 64},
+            {384, 384, 64, 64}, {448, 384, 64, 64}
+    };
+    InitGameObjectAnimation(&player->base, respawnFrames, 8, 0.1f);
+
 }
 
 void PlayerUpdateRespawn(GameObject *obj)
 {
     printf("\n%s -> UPDATE -> Respawn\n", obj->name);
-    ChangeState(obj, STATE_IDLE);
-    // Complete the remainder of the method
     UpdateAnimation(&obj->animation);
+    if (obj->animation.currentFrame >= obj->animation.frameCount - 1) {
+        ChangeState(obj, STATE_IDLE);
+    }
+
 }
 
 void PlayerExitRespawn(GameObject *obj)
 {
     printf("\n%s <- EXIT <- Respawn\n", obj->name);
     // Complete the remainder of the method
+}
+void PlayerEnterShield(GameObject *obj)
+{
+    Player *player = (Player *)obj;
+    printf("\n%s -> ENTER -> Shield\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+
+    Rectangle shieldFrames[8] = {
+            {0, 384, 64, 64}, {64, 384, 64, 64}, {128, 384, 64, 64}, {192, 384, 64, 64},
+            {256, 384, 64, 64}, {320, 384, 64, 64}, {384, 384, 64, 64}, {448, 384, 64, 64}
+    };
+    InitGameObjectAnimation(&player->base, shieldFrames, 8, 0.1f);
+}
+
+void PlayerShieldHandleEvent(GameObject *obj, Event event)
+{
+    Player *player = (Player *)obj;
+    printf("\n%s Shield HandleEvent\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+    switch (event)
+    {
+        case EVENT_NONE:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_DIE:
+            ChangeState(obj, STATE_DEAD);
+            break;
+
+        default:
+            break;
+    }
+}
+
+void PlayerUpdateShield(GameObject *obj)
+{
+    Player *player = (Player *)obj;
+    printf("\n%s -> UPDATE -> Shield\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+    UpdateAnimation(&obj->animation);
+
+    // Consume stamina while shielding
+    player->stamina -= 0.1f;
+    if (player->stamina <= 0)
+    {
+        ChangeState(obj, STATE_IDLE);
+    }
+}
+
+void PlayerExitShield(GameObject *obj)
+{
+    Player *player = (Player *)obj;
+    printf("\n%s <- EXIT <- Shield\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
 }
