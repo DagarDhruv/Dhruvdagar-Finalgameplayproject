@@ -7,14 +7,14 @@ typedef enum
     EVENT_NONE, // Represents no event or an idle state where nothing happens.
 
     // Movement Events:
-    // EVENT_MOVE_UP, // Represents moving the player character up (e.g., in a platformer, upwards movement).
+    EVENT_MOVE_UP, // Represents moving the player character up (e.g., in a platformer, upwards movement).
     // EVENT_MOVE_UP_RIGHT,   // Represents moving the player character diagonally up-right (e.g., in a platformer, jumping at an angle).
     // EVENT_MOVE_UP_LEFT,    // Represents moving the player character diagonally up-left (e.g., in a platformer, jumping at an angle).
-    // EVENT_MOVE_DOWN,       // Represents moving the player character down (e.g., in a platformer, downward movement).
-    // EVENT_MOVE_DOWN_RIGHT, // Represents moving the player character diagonally down-right (e.g., running at an angle).
-    // EVENT_MOVE_DOWN_LEFT,  // Represents moving the player character diagonally down-left (e.g., running at an angle).
-    // EVENT_MOVE_LEFT,       // Represents moving the player character to the left (e.g., in a platformer, leftward movement).
-    // EVENT_MOVE_RIGHT,      // Represents moving the player character to the right (e.g., in a platformer, rightward movement).
+    EVENT_MOVE_DOWN,       // Represents moving the player character down (e.g., in a platformer, downward movement).
+    //EVENT_MOVE_DOWN_RIGHT, // Represents moving the player character diagonally down-right (e.g., running at an angle).
+    //EVENT_MOVE_DOWN_LEFT,  // Represents moving the player character diagonally down-left (e.g., running at an angle).
+    EVENT_MOVE_LEFT,       // Represents moving the player character to the left (e.g., in a platformer, leftward movement).
+    EVENT_MOVE_RIGHT,      // Represents moving the player character to the right (e.g., in a platformer, rightward movement).
     EVENT_MOVE, // A general move event for when the player is moving in any direction, used as a catch-all for movement.
 
     // Environmental/State Events:
@@ -52,4 +52,4 @@ typedef enum
     EVENT_COUNT // Represents the total number of events (for counting purposes, typically used for array size).
 } Event;        // Define 'Event' as the type of the enum
 
-#endif // EVENTS_H
+#endif

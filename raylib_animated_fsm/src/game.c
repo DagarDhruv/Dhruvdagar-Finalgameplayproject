@@ -62,32 +62,32 @@ void UpdateGame(GameData *gameData)
         command = PollAI();
         switch (command)
         {
-        case COMMAND_NONE:
-            HandleEvent((GameObject *)gameData->npc, EVENT_NONE);
-            break;
-        case COMMAND_MOVE_UP:
-            HandleEvent((GameObject *)gameData->npc, EVENT_MOVE);
-            break;
-        case COMMAND_MOVE_DOWN:
-            HandleEvent((GameObject *)gameData->npc, EVENT_MOVE);
-            break;
-        case COMMAND_MOVE_LEFT:
-            HandleEvent((GameObject *)gameData->npc, EVENT_MOVE);
-            break;
-        case COMMAND_MOVE_RIGHT:
-            HandleEvent((GameObject *)gameData->npc, EVENT_MOVE);
-            break;
-        case COMMAND_ATTACK:
-            HandleEvent((GameObject *)gameData->npc, EVENT_ATTACK);
-            break;
-        case COMMAND_COLLISION_START:
-            HandleEvent((GameObject *)gameData->npc, EVENT_DIE);
-            break;
-        case COMMAND_COLLISION_END:
-            HandleEvent((GameObject *)gameData->npc, EVENT_RESPAWN);
-            break;
-        default:
-            break;
+            case COMMAND_NONE:
+                HandleEvent((GameObject *)gameData->npc, EVENT_NONE);
+                break;
+            case COMMAND_MOVE_UP:
+                HandleEvent((GameObject *)gameData->npc, EVENT_MOVE_UP);
+                break;
+            case COMMAND_MOVE_DOWN:
+                HandleEvent((GameObject *)gameData->npc, EVENT_MOVE_DOWN);
+                break;
+            case COMMAND_MOVE_LEFT:
+                HandleEvent((GameObject *)gameData->npc, EVENT_MOVE_LEFT);
+                break;
+            case COMMAND_MOVE_RIGHT:
+                HandleEvent((GameObject *)gameData->npc, EVENT_MOVE_RIGHT);
+                break;
+            case COMMAND_ATTACK:
+                HandleEvent((GameObject *)gameData->npc, EVENT_ATTACK);
+                break;
+            case COMMAND_COLLISION_START:
+                HandleEvent((GameObject *)gameData->npc, EVENT_DIE);
+                break;
+            case COMMAND_COLLISION_END:
+                HandleEvent((GameObject *)gameData->npc, EVENT_RESPAWN);
+                break;
+            default:
+                break;
         }
 
         // Update the last AI execution time

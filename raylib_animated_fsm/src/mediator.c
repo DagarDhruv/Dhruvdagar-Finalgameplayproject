@@ -60,32 +60,32 @@ void MediatorExecuteCommand(Command command, Mediator *mediator)
 
     switch (command)
     {
-    case COMMAND_NONE:
-        HandleEvent(mediator->obj, EVENT_NONE);
-        break;
-    case COMMAND_MOVE_UP:
-        HandleEvent(mediator->obj, EVENT_MOVE);
-        break;
-    case COMMAND_MOVE_DOWN:
-        HandleEvent(mediator->obj, EVENT_MOVE);
-        break;
-    case COMMAND_MOVE_LEFT:
-        HandleEvent(mediator->obj, EVENT_MOVE);
-        break;
-    case COMMAND_MOVE_RIGHT:
-        HandleEvent(mediator->obj, EVENT_MOVE);
-        break;
-    case COMMAND_ATTACK:
-        HandleEvent(mediator->obj, EVENT_ATTACK);
-        break;
-    case COMMAND_COLLISION_START:
-        HandleEvent(mediator->obj, EVENT_DIE);
-        break;
-    case COMMAND_COLLISION_END:
-        HandleEvent(mediator->obj, EVENT_RESPAWN);
-        break;
-    default:
-        break;
+        case COMMAND_NONE:
+            HandleEvent(mediator->obj, EVENT_NONE);
+            break;
+        case COMMAND_MOVE_UP:
+            HandleEvent(mediator->obj, EVENT_MOVE_UP);
+            break;
+        case COMMAND_MOVE_DOWN:
+            HandleEvent(mediator->obj, EVENT_MOVE_DOWN);
+            break;
+        case COMMAND_MOVE_LEFT:
+            HandleEvent(mediator->obj, EVENT_MOVE_LEFT);
+            break;
+        case COMMAND_MOVE_RIGHT:
+            HandleEvent(mediator->obj, EVENT_MOVE_RIGHT);
+            break;
+        case COMMAND_ATTACK:
+            HandleEvent(mediator->obj, EVENT_ATTACK);
+            break;
+        case COMMAND_COLLISION_START:
+            HandleEvent(mediator->obj, EVENT_DIE);
+            break;
+        case COMMAND_COLLISION_END:
+            HandleEvent(mediator->obj, EVENT_RESPAWN);
+            break;
+        default:
+            break;
     }
 }
 
