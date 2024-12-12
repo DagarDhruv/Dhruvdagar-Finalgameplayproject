@@ -8,11 +8,11 @@ typedef enum
 
     // Movement Events:
     EVENT_MOVE_UP, // Represents moving the player character up (e.g., in a platformer, upwards movement).
-    // EVENT_MOVE_UP_RIGHT,   // Represents moving the player character diagonally up-right (e.g., in a platformer, jumping at an angle).
-    // EVENT_MOVE_UP_LEFT,    // Represents moving the player character diagonally up-left (e.g., in a platformer, jumping at an angle).
+    EVENT_MOVE_UP_RIGHT,   // Represents moving the player character diagonally up-right (e.g., in a platformer, jumping at an angle).
+    EVENT_MOVE_UP_LEFT,    // Represents moving the player character diagonally up-left (e.g., in a platformer, jumping at an angle).
     EVENT_MOVE_DOWN,       // Represents moving the player character down (e.g., in a platformer, downward movement).
-    //EVENT_MOVE_DOWN_RIGHT, // Represents moving the player character diagonally down-right (e.g., running at an angle).
-    //EVENT_MOVE_DOWN_LEFT,  // Represents moving the player character diagonally down-left (e.g., running at an angle).
+    EVENT_MOVE_DOWN_RIGHT, // Represents moving the player character diagonally down-right (e.g., running at an angle).
+    EVENT_MOVE_DOWN_LEFT,  // Represents moving the player character diagonally down-left (e.g., running at an angle).
     EVENT_MOVE_LEFT,       // Represents moving the player character to the left (e.g., in a platformer, leftward movement).
     EVENT_MOVE_RIGHT,      // Represents moving the player character to the right (e.g., in a platformer, rightward movement).
     EVENT_MOVE, // A general move event for when the player is moving in any direction, used as a catch-all for movement.
@@ -24,7 +24,7 @@ typedef enum
     EVENT_ATTACK, // Represents a basic attack event (e.g., player character performing a melee or ranged attack).
     // EVENT_ATTACK_SPECIAL, // Represents performing a special or charged attack (e.g., a powerful or combo attack).
     EVENT_DEFEND, // Represents the player character activating a defense action (e.g., blocking, shielding).
-
+   // EVENT_MAGIC,//uses magic for the player so the damage increases by 2x for 10 sec.
     // Life Cycle Events:
     EVENT_DIE,     // Represents the player character dying (e.g., health reaching zero or being defeated by an enemy).
     EVENT_RESPAWN, // Represents the player respawning after death (e.g., after a timeout, or at a checkpoint).

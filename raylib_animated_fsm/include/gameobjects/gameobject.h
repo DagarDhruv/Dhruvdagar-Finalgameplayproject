@@ -40,6 +40,7 @@ typedef struct GameObject
     AnimationData animation; // Player Animation
 
     int health; // The health of the game object
+    float speed;
 } GameObject;
 
 // Initialize a new game object with the given name and default values
@@ -52,7 +53,8 @@ void InitGameObject(GameObject *obj,
                     c2Circle collider,
                     c2AABB bounds,
                     Texture2D keyframes,
-                    int health);
+                    int health,
+                    float speed);
 
 // Helper function to initialize animation
 void InitGameObjectAnimation(GameObject *obj, Rectangle *frames, int frameCount, float speed);

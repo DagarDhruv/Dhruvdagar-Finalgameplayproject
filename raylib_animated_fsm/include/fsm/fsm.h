@@ -23,12 +23,17 @@ typedef enum
     STATE_MOVING_DOWN,  // Represents the state when the player is moving downwards
     STATE_MOVING_LEFT,  // Represents the state when the player is moving to the left
     STATE_MOVING_RIGHT, // Represents the state when the player is moving to the right
+    STATE_MOVING_UP_LEFT,
+    STATE_MOVING_UP_RIGHT,
+    STATE_MOVING_DOWN_LEFT,
+    STATE_MOVING_DOWN_RIGHT,
     STATE_ATTACKING, // Represents the attacking state
     STATE_SHIELD,    // Represents the shield state (defensive posture)
     STATE_DEAD,      // Represents the dead state (game over or defeated)
     STATE_RESPAWN,   // Represents the respawn state (respawns the player)
     STATE_COLLISION, // Represents the state when a collision is detected (e.g., with an enemy or obstacle)
-    STATE_COUNT      // Represents the total number of states (for counting purposes)
+    STATE_COUNT,      // Represents the total number of states (for counting purposes)
+   /* STATE_MAGIC */      //represent the state of magic is used
 } State;             // Define 'State' as the type of the enum
 
 /**

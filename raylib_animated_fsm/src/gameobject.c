@@ -46,7 +46,8 @@ void InitGameObject(GameObject *obj,
                     c2Circle collider,
                     c2AABB bounds,
                     Texture2D keyframes,
-                    int health)
+                    int health,
+                    float speed)
 {
     // Set the GameObject's name
     obj->name = name;
@@ -63,6 +64,7 @@ void InitGameObject(GameObject *obj,
     obj->bounds = bounds;
     obj->keyframes = keyframes;
     obj->health = health;
+    obj->speed = speed;
 }
 
 /**

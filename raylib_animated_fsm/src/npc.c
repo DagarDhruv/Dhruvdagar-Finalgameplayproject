@@ -197,6 +197,24 @@ void NPCIdleHandleEvent(GameObject *obj, Event event)
     case EVENT_COLLISION_END:
     case EVENT_COUNT:
         break;
+        case EVENT_MOVE_UP:
+            break;
+        case EVENT_MOVE_UP_RIGHT:
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            break;
+        case EVENT_MOVE_DOWN:
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            break;
+        case EVENT_MOVE_LEFT:
+            break;
+        case EVENT_MOVE_RIGHT:
+            break;
+       /* case EVENT_MAGIC:
+            break;*/
     }
 }
 
@@ -229,6 +247,24 @@ void NPCAttackingHandleEvent(GameObject *obj, Event event)
     case EVENT_COLLISION_END:
     case EVENT_COUNT:
         break;
+        case EVENT_MOVE_UP:
+            break;
+        case EVENT_MOVE_UP_RIGHT:
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            break;
+        case EVENT_MOVE_DOWN:
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            break;
+        case EVENT_MOVE_LEFT:
+            break;
+        case EVENT_MOVE_RIGHT:
+            break;
+        /*case EVENT_MAGIC:
+            break;*/
     }
 }
 
@@ -261,6 +297,24 @@ void NPCShieldingHandleEvent(GameObject *obj, Event event)
     case EVENT_COLLISION_END:
     case EVENT_COUNT:
         break;
+        case EVENT_MOVE_UP:
+            break;
+        case EVENT_MOVE_UP_RIGHT:
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            break;
+        case EVENT_MOVE_DOWN:
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            break;
+        case EVENT_MOVE_LEFT:
+            break;
+        case EVENT_MOVE_RIGHT:
+            break;
+        /*case EVENT_MAGIC:
+            break;*/
     }
 }
 
@@ -291,6 +345,24 @@ void NPCDeadHandleEvent(GameObject *obj, Event event)
     case EVENT_COLLISION_END:
     case EVENT_COUNT:
         break;
+        case EVENT_MOVE_UP:
+            break;
+        case EVENT_MOVE_UP_RIGHT:
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            break;
+        case EVENT_MOVE_DOWN:
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            break;
+        case EVENT_MOVE_LEFT:
+            break;
+        case EVENT_MOVE_RIGHT:
+            break;
+        /*case EVENT_MAGIC:
+            break;*/
     }
 }
 

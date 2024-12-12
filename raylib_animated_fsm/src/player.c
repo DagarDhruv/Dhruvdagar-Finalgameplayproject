@@ -42,7 +42,8 @@ Player *InitPlayer(const char *name)
                            .min = {GetScreenWidth() / 2.0f - 10, GetScreenHeight() / 2.0f - 10},
                            .max = {GetScreenWidth() / 2.0f + 10, GetScreenHeight() / 2.0f + 10}},
                    playerTexture,
-                   100 // Initial Health
+                   100, // Initial Health
+                   2
     );
 
     // Player Specific Data
@@ -102,7 +103,7 @@ void InitPlayerFSM(GameObject *obj)
 
     // ---- STATE_IDLE state configuration ----
     // Define valid transitions from STATE_IDLE
-    State idleValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN};
+    State idleValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN,STATE_MOVING_UP_LEFT,STATE_MOVING_UP_RIGHT,STATE_MOVING_DOWN_LEFT,STATE_MOVING_DOWN_RIGHT};
 
     // Set up the state configuration for STATE_IDLE
     obj->stateConfigs[STATE_IDLE].name = "Player_Idle";
@@ -116,7 +117,7 @@ void InitPlayerFSM(GameObject *obj)
 
     // ---- STATE_WALKING state configuration ----
     // Define valid transitions from STATE_WALKING
-    State walkingValidTransitions[] = {STATE_IDLE, STATE_ATTACKING, STATE_DEAD};
+    State walkingValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN,STATE_MOVING_UP_LEFT,STATE_MOVING_UP_RIGHT,STATE_MOVING_DOWN_LEFT,STATE_MOVING_DOWN_RIGHT};
 
     // Set up the state configuration for STATE_WALKING
     obj->stateConfigs[STATE_WALKING].name = "Player_Walking";
@@ -162,11 +163,55 @@ void InitPlayerFSM(GameObject *obj)
     obj->stateConfigs[STATE_MOVING_RIGHT].Update = PlayerUpdateWalking;
     obj->stateConfigs[STATE_MOVING_RIGHT].Exit = PlayerExitWalking;
     StateTransitions(&obj->stateConfigs[STATE_MOVING_RIGHT], movingRightValidTransitions, sizeof(movingRightValidTransitions) / sizeof(State));
+// Up Left Movement
+    State movingUpLeftValidTransitions[] = {STATE_IDLE, STATE_ATTACKING, STATE_DEAD};
+    obj->stateConfigs[STATE_MOVING_UP_LEFT].name = "Player_Moving_Up_Left";
+    obj->stateConfigs[STATE_MOVING_UP_LEFT].HandleEvent = PlayerWalkingHandleEvent;
+    obj->stateConfigs[STATE_MOVING_UP_LEFT].Entry = PlayerEnterWalking;
+    obj->stateConfigs[STATE_MOVING_UP_LEFT].Update = PlayerUpdateWalking;
+    obj->stateConfigs[STATE_MOVING_UP_LEFT].Exit = PlayerExitWalking;
+    StateTransitions(&obj->stateConfigs[STATE_MOVING_UP_LEFT], movingUpLeftValidTransitions, sizeof(movingUpLeftValidTransitions) / sizeof(State));
+
+// Up Right Movement
+    State movingUpRightValidTransitions[] = {STATE_IDLE, STATE_ATTACKING, STATE_DEAD};
+    obj->stateConfigs[STATE_MOVING_UP_RIGHT].name = "Player_Moving_Up_Right";
+    obj->stateConfigs[STATE_MOVING_UP_RIGHT].HandleEvent = PlayerWalkingHandleEvent;
+    obj->stateConfigs[STATE_MOVING_UP_RIGHT].Entry = PlayerEnterWalking;
+    obj->stateConfigs[STATE_MOVING_UP_RIGHT].Update = PlayerUpdateWalking;
+    obj->stateConfigs[STATE_MOVING_UP_RIGHT].Exit = PlayerExitWalking;
+    StateTransitions(&obj->stateConfigs[STATE_MOVING_UP_RIGHT], movingUpRightValidTransitions, sizeof(movingUpRightValidTransitions) / sizeof(State));
+
+// Down Left Movement
+    State movingDownLeftValidTransitions[] = {STATE_IDLE, STATE_ATTACKING, STATE_DEAD};
+    obj->stateConfigs[STATE_MOVING_DOWN_LEFT].name = "Player_Moving_Down_Left";
+    obj->stateConfigs[STATE_MOVING_DOWN_LEFT].HandleEvent = PlayerWalkingHandleEvent;
+    obj->stateConfigs[STATE_MOVING_DOWN_LEFT].Entry = PlayerEnterWalking;
+    obj->stateConfigs[STATE_MOVING_DOWN_LEFT].Update = PlayerUpdateWalking;
+    obj->stateConfigs[STATE_MOVING_DOWN_LEFT].Exit = PlayerExitWalking;
+    StateTransitions(&obj->stateConfigs[STATE_MOVING_DOWN_LEFT], movingDownLeftValidTransitions, sizeof(movingDownLeftValidTransitions) / sizeof(State));
+
+// Down Right Movement
+    State movingDownRightValidTransitions[] = {STATE_IDLE, STATE_ATTACKING, STATE_DEAD};
+    obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].name = "Player_Moving_Down_Right";
+    obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].HandleEvent = PlayerWalkingHandleEvent;
+    obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Entry = PlayerEnterWalking;
+    obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Update = PlayerUpdateWalking;
+    obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Exit = PlayerExitWalking;
+    StateTransitions(&obj->stateConfigs[STATE_MOVING_DOWN_RIGHT], movingDownRightValidTransitions, sizeof(movingDownRightValidTransitions) / sizeof(State));
+
+
     // ---- STATE_ATTACKING state configuration ----
     // Define valid transitions from STATE_ATTACKING
     State attackValidTransitions[] = {STATE_IDLE, STATE_DEAD};
-
-    // Set up the state configuration for STATE_ATTACKING
+/*// Uses the magic attack
+    State MagicValidTransitions[] = {STATE_IDLE,STATE_DEAD,STATE_ATTACKING};
+    obj->stateConfigs[STATE_MAGIC].name = "Player_Using_Magic";
+    obj->stateConfigs[STATE_MAGIC].HandleEvent = PlayerMagicHandleEvent;
+    obj->stateConfigs[STATE_MAGIC].Entry = PlayerEnterMagic;
+    obj->stateConfigs[STATE_MAGIC].Update = PlayerUpdateMagic;
+    obj->stateConfigs[STATE_MAGIC].Exit = PlayerExitMagic;
+    StateTransitions(&obj->stateConfigs[STATE_MAGIC], MagicValidTransitions, sizeof(MagicValidTransitions) / sizeof(State));
+    // Set up the state configuration for STATE_ATTACKING*/
     obj->stateConfigs[STATE_ATTACKING].name = "Player_Attacking";
     obj->stateConfigs[STATE_ATTACKING].HandleEvent = PlayerAttackingHandleEvent;
     obj->stateConfigs[STATE_ATTACKING].Entry = PlayerEnterAttacking;
@@ -270,6 +315,21 @@ void PlayerIdleHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_RIGHT:
             ChangeState(obj,STATE_MOVING_RIGHT);
             break;
+       /* case EVENT_MAGIC:
+            ChangeState(obj,STATE_MAGIC);
+            break;*/
+        case EVENT_MOVE_UP_RIGHT:
+            ChangeState(obj,STATE_MOVING_UP_RIGHT);
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            ChangeState(obj,STATE_MOVING_UP_LEFT);
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            ChangeState(obj,STATE_MOVING_DOWN_RIGHT);
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            ChangeState(obj,STATE_MOVING_DOWN_LEFT);
+            break;
     }
 }
 
@@ -314,6 +374,20 @@ void PlayerWalkingHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_RIGHT:
             ChangeState(obj,STATE_MOVING_RIGHT);
             break;
+        /*case EVENT_MAGIC:
+            break;*/
+        case EVENT_MOVE_UP_RIGHT:
+            ChangeState(obj,STATE_MOVING_UP_RIGHT);
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            ChangeState(obj,STATE_MOVING_UP_LEFT);
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            ChangeState(obj,STATE_MOVING_DOWN_RIGHT);
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            ChangeState(obj,STATE_MOVING_DOWN_LEFT);
+            break;
     }
 }
 
@@ -351,6 +425,16 @@ void PlayerAttackingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
+        /*case EVENT_MAGIC:
+            break;*/
+        case EVENT_MOVE_UP_RIGHT:
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            break;
     }
 }
 
@@ -387,6 +471,16 @@ void PlayerShieldingHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_LEFT:
             break;
         case EVENT_MOVE_RIGHT:
+            break;
+        /*case EVENT_MAGIC:
+            break;*/
+        case EVENT_MOVE_UP_RIGHT:
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
             break;
     }
 }
@@ -600,6 +694,26 @@ void PlayerEnterWalking(GameObject *obj) {
 
     // Select animation frames based on movement direction
     switch (player->base.currentState) {
+        case STATE_MOVING_UP_LEFT:
+            for (int i = 0; i < 9; i++) {
+                walkFrames[i] = (Rectangle){i * 64, 512, 64, 64};  // Row 8
+            }
+            break;
+        case STATE_MOVING_UP_RIGHT:
+            for (int i = 0; i < 9; i++) {
+                walkFrames[i] = (Rectangle){i * 64, 512, 64, 64};  // Row 8
+            }
+            break;
+        case STATE_MOVING_DOWN_LEFT:
+            for (int i = 0; i < 9; i++) {
+                walkFrames[i] = (Rectangle){i * 64, 640, 64, 64};  // Row 10
+            }
+            break;
+        case STATE_MOVING_DOWN_RIGHT:
+            for (int i = 0; i < 9; i++) {
+                walkFrames[i] = (Rectangle){i * 64, 640, 64, 64};  // Row 10
+            }
+            break;
         case STATE_MOVING_UP:
             for (int i = 0; i < 9; i++) {
                 walkFrames[i] = (Rectangle){i * 64, 512, 64, 64};  // Row 8
@@ -640,10 +754,27 @@ void PlayerUpdateWalking(GameObject *obj) {
     printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
 
     Vector2 moveDirection = {0, 0};
-    float moveSpeed = 2.0f;
+    float moveSpeed = obj->speed;
 
     // Determine movement direction based on current state
     switch (obj->currentState) {
+        case STATE_MOVING_UP_RIGHT:
+            moveDirection.y = -moveSpeed/2.0f;
+            moveDirection.x = moveSpeed/2.0f;
+            break;
+        case STATE_MOVING_UP_LEFT:
+            moveDirection.y = -moveSpeed/2.0f;
+            moveDirection.x = -moveSpeed/2.0f;
+            break;
+        case STATE_MOVING_DOWN_RIGHT:
+            moveDirection.y = moveSpeed/2.0f;
+            moveDirection.x = moveSpeed/2.0f;
+            break;
+        case STATE_MOVING_DOWN_LEFT:
+            moveDirection.y = moveSpeed/2.0f;
+            moveDirection.x = -moveSpeed/2.0f;
+            break;
+
         case STATE_MOVING_UP:
             moveDirection.y = -moveSpeed;
             break;
@@ -787,3 +918,61 @@ void PlayerExitRespawn(GameObject *obj)
     printf("\n%s <- EXIT <- Respawn\n", obj->name);
     // Complete the remainder of the method
 }
+/*
+void PlayerEnterMagic(GameObject *obj) {
+    Player *player = (Player *)obj;
+    printf("\n%s -> ENTER -> Magic\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+
+    // Increase player speed by 1.5x
+    obj->velocity.x *= 1.5f;
+    obj->velocity.y *= 1.5f;
+
+    // Reduce enemy health by 10%
+    obj->health *= 0.9f;
+}
+
+void PlayerMagicHandleEvent(GameObject *obj, Event event) {
+    Player *player = (Player *)obj;
+    printf("\n%s Magic HandleEvent\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+
+    switch (event) {
+        case EVENT_NONE:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_DIE:
+            ChangeState(obj, STATE_DEAD);
+            break;
+        case EVENT_ATTACK:
+            ChangeState(obj, STATE_ATTACKING);
+            break;
+        default:
+            break;
+    }
+}
+
+void PlayerUpdateMagic(GameObject *obj) {
+    Player *player = (Player *)obj;
+    static float magicTimer = 10.0f;
+
+    printf("\n%s -> UPDATE -> Magic\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+
+    magicTimer -= GetFrameTime();
+    if (magicTimer <= 0) {
+        magicTimer = 10.0f;  // Reset timer for next use
+        ChangeState(obj, STATE_IDLE);
+    }
+}
+
+void PlayerExitMagic(GameObject *obj) {
+    Player *player = (Player *)obj;
+    printf("\n%s <- EXIT <- Magic\n", obj->name);
+    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+
+    // Reset speed to normal
+    obj->velocity.x /= 1.5f;
+    obj->velocity.y /= 1.5f;
+}
+*/
