@@ -33,7 +33,6 @@ typedef enum
     STATE_RESPAWN,   // Represents the respawn state (respawns the player)
     STATE_COLLISION, // Represents the state when a collision is detected (e.g., with an enemy or obstacle)
     STATE_COUNT,      // Represents the total number of states (for counting purposes)
-   /* STATE_MAGIC */      //represent the state of magic is used
 } State;             // Define 'State' as the type of the enum
 
 /**

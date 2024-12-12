@@ -76,9 +76,9 @@ void PlayerRespawnHandleEvent(GameObject *obj, Event event);
 void PlayerEnterRespawn(GameObject *obj);  // Called when entering the respawn state
 void PlayerUpdateRespawn(GameObject *obj); // Called to update the player's behavior while respawning
 void PlayerExitRespawn(GameObject *obj);   // Called when exiting the respawn
-/*// state transitions function for player magic
+// state transitions function for player magic
 void PlayerEnterMagic(GameObject *obj);
 void PlayerMagicHandleEvent(GameObject *obj, Event event );
 void PlayerUpdateMagic(GameObject *obj);
-void PlayerExitMagic(GameObject *obj);*/
+void PlayerExitMagic(GameObject *obj);
 #endif // PLAYER_H

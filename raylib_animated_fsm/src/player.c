@@ -103,7 +103,7 @@ void InitPlayerFSM(GameObject *obj)
 
     // ---- STATE_IDLE state configuration ----
     // Define valid transitions from STATE_IDLE
-    State idleValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN,STATE_MOVING_UP_LEFT,STATE_MOVING_UP_RIGHT,STATE_MOVING_DOWN_LEFT,STATE_MOVING_DOWN_RIGHT};
+    State idleValidTransitions[] = {STATE_WALKING, STATE_ATTACKING, STATE_SHIELD, STATE_DEAD,STATE_MOVING_UP,STATE_MOVING_RIGHT,STATE_MOVING_LEFT,STATE_MOVING_DOWN,STATE_MOVING_UP_LEFT,STATE_MOVING_UP_RIGHT,STATE_MOVING_DOWN_LEFT,STATE_MOVING_DOWN_RIGHT,STATE_MAGIC};
 
     // Set up the state configuration for STATE_IDLE
     obj->stateConfigs[STATE_IDLE].name = "Player_Idle";
@@ -198,20 +198,10 @@ void InitPlayerFSM(GameObject *obj)
     obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Update = PlayerUpdateWalking;
     obj->stateConfigs[STATE_MOVING_DOWN_RIGHT].Exit = PlayerExitWalking;
     StateTransitions(&obj->stateConfigs[STATE_MOVING_DOWN_RIGHT], movingDownRightValidTransitions, sizeof(movingDownRightValidTransitions) / sizeof(State));
-
-
     // ---- STATE_ATTACKING state configuration ----
     // Define valid transitions from STATE_ATTACKING
     State attackValidTransitions[] = {STATE_IDLE, STATE_DEAD};
-/*// Uses the magic attack
-    State MagicValidTransitions[] = {STATE_IDLE,STATE_DEAD,STATE_ATTACKING};
-    obj->stateConfigs[STATE_MAGIC].name = "Player_Using_Magic";
-    obj->stateConfigs[STATE_MAGIC].HandleEvent = PlayerMagicHandleEvent;
-    obj->stateConfigs[STATE_MAGIC].Entry = PlayerEnterMagic;
-    obj->stateConfigs[STATE_MAGIC].Update = PlayerUpdateMagic;
-    obj->stateConfigs[STATE_MAGIC].Exit = PlayerExitMagic;
-    StateTransitions(&obj->stateConfigs[STATE_MAGIC], MagicValidTransitions, sizeof(MagicValidTransitions) / sizeof(State));
-    // Set up the state configuration for STATE_ATTACKING*/
+    // Set up the state configuration for STATE_ATTACKING
     obj->stateConfigs[STATE_ATTACKING].name = "Player_Attacking";
     obj->stateConfigs[STATE_ATTACKING].HandleEvent = PlayerAttackingHandleEvent;
     obj->stateConfigs[STATE_ATTACKING].Entry = PlayerEnterAttacking;
@@ -315,9 +305,6 @@ void PlayerIdleHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_RIGHT:
             ChangeState(obj,STATE_MOVING_RIGHT);
             break;
-       /* case EVENT_MAGIC:
-            ChangeState(obj,STATE_MAGIC);
-            break;*/
         case EVENT_MOVE_UP_RIGHT:
             ChangeState(obj,STATE_MOVING_UP_RIGHT);
             break;
@@ -374,8 +361,6 @@ void PlayerWalkingHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_RIGHT:
             ChangeState(obj,STATE_MOVING_RIGHT);
             break;
-        /*case EVENT_MAGIC:
-            break;*/
         case EVENT_MOVE_UP_RIGHT:
             ChangeState(obj,STATE_MOVING_UP_RIGHT);
             break;
@@ -425,8 +410,6 @@ void PlayerAttackingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
-        /*case EVENT_MAGIC:
-            break;*/
         case EVENT_MOVE_UP_RIGHT:
             break;
         case EVENT_MOVE_UP_LEFT:
@@ -472,8 +455,6 @@ void PlayerShieldingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
-        /*case EVENT_MAGIC:
-            break;*/
         case EVENT_MOVE_UP_RIGHT:
             break;
         case EVENT_MOVE_UP_LEFT:
@@ -918,61 +899,3 @@ void PlayerExitRespawn(GameObject *obj)
     printf("\n%s <- EXIT <- Respawn\n", obj->name);
     // Complete the remainder of the method
 }
-/*
-void PlayerEnterMagic(GameObject *obj) {
-    Player *player = (Player *)obj;
-    printf("\n%s -> ENTER -> Magic\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-
-    // Increase player speed by 1.5x
-    obj->velocity.x *= 1.5f;
-    obj->velocity.y *= 1.5f;
-
-    // Reduce enemy health by 10%
-    obj->health *= 0.9f;
-}
-
-void PlayerMagicHandleEvent(GameObject *obj, Event event) {
-    Player *player = (Player *)obj;
-    printf("\n%s Magic HandleEvent\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-
-    switch (event) {
-        case EVENT_NONE:
-            ChangeState(obj, STATE_IDLE);
-            break;
-        case EVENT_DIE:
-            ChangeState(obj, STATE_DEAD);
-            break;
-        case EVENT_ATTACK:
-            ChangeState(obj, STATE_ATTACKING);
-            break;
-        default:
-            break;
-    }
-}
-
-void PlayerUpdateMagic(GameObject *obj) {
-    Player *player = (Player *)obj;
-    static float magicTimer = 10.0f;
-
-    printf("\n%s -> UPDATE -> Magic\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-
-    magicTimer -= GetFrameTime();
-    if (magicTimer <= 0) {
-        magicTimer = 10.0f;  // Reset timer for next use
-        ChangeState(obj, STATE_IDLE);
-    }
-}
-
-void PlayerExitMagic(GameObject *obj) {
-    Player *player = (Player *)obj;
-    printf("\n%s <- EXIT <- Magic\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-
-    // Reset speed to normal
-    obj->velocity.x /= 1.5f;
-    obj->velocity.y /= 1.5f;
-}
-*/

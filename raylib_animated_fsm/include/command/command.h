@@ -20,7 +20,6 @@ typedef enum
     COMMAND_COLLISION_END,   // Command indicating the end of a collision (Not Implemented)
     COMMAND_NONE,            // No command (used to represent a neutral or idle state)
     COMMAND_COUNT,            // Total number of commands, useful for looping or limits
-    COMMAND_MAGIC               // Uses the Magic 
 } Command;
 
 // Function to execute a command

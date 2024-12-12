@@ -72,9 +72,6 @@ void MediatorExecuteCommand(Command command, Mediator *mediator)
         case COMMAND_MOVE_DOWN_RIGHT:
             HandleEvent(mediator->obj,EVENT_MOVE_DOWN_RIGHT);
             break;
-        /*case COMMAND_MAGIC:
-            HandleEvent(mediator->obj,EVENT_MAGIC);
-            break;*/
         case COMMAND_NONE:
             HandleEvent(mediator->obj, EVENT_NONE);
             break;

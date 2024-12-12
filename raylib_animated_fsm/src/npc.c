@@ -42,7 +42,8 @@ NPC *InitNPC(const char *name)
                             .min = {GetScreenWidth() / 2.0f - 10, 100.0f - 10},
                             .max = {GetScreenWidth() / 2.0f + 10, 100.0f + 10}},
                    npcTexture,
-                   100 // Initial Health
+                   100, // Initial Health
+                   2
     );
 
     // Set the default aggression level for the NPC
@@ -213,8 +214,6 @@ void NPCIdleHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
-       /* case EVENT_MAGIC:
-            break;*/
     }
 }
 
@@ -263,8 +262,6 @@ void NPCAttackingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
-        /*case EVENT_MAGIC:
-            break;*/
     }
 }
 
@@ -313,8 +310,6 @@ void NPCShieldingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
-        /*case EVENT_MAGIC:
-            break;*/
     }
 }
 
@@ -361,8 +356,6 @@ void NPCDeadHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
-        /*case EVENT_MAGIC:
-            break;*/
     }
 }
 
