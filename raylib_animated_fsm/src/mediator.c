@@ -60,6 +60,9 @@ void MediatorExecuteCommand(Command command, Mediator *mediator)
 
     switch (command)
     {
+        case COMMAND_SHIELD:
+            HandleEvent(mediator->obj,EVENT_SHIELD);
+            break;
         case COMMAND_MOVE_UP_LEFT:
             HandleEvent(mediator->obj,EVENT_MOVE_UP_LEFT);
             break;

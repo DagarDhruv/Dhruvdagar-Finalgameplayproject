@@ -225,13 +225,6 @@ void InitPlayerFSM(GameObject *obj)
     // Define valid transitions from STATE_SHIELD
     State sheildingValidTransitions[] = {STATE_IDLE, STATE_DEAD};
 
-    // Set up the state configuration for STATE_SHIELD
-    obj->stateConfigs[STATE_SHIELD].name = "Player_Shielding";
-    obj->stateConfigs[STATE_SHIELD].HandleEvent = PlayerShieldingHandleEvent;
-    obj->stateConfigs[STATE_SHIELD].Entry = PlayerEnterShielding;
-    obj->stateConfigs[STATE_SHIELD].Update = PlayerUpdateShielding;
-    obj->stateConfigs[STATE_SHIELD].Exit = PlayerExitShielding;
-
     // Configure valid transitions for STATE_SHIELD
     StateTransitions(&obj->stateConfigs[STATE_SHIELD], sheildingValidTransitions, sizeof(sheildingValidTransitions) / sizeof(State));
 
@@ -439,51 +432,7 @@ void PlayerAttackingHandleEvent(GameObject *obj, Event event)
 }
 
 // Handles events for the Player when in the Shielding state
-void PlayerShieldingHandleEvent(GameObject *obj, Event event)
-{
-    Player *player = (Player *)obj;
-    printf("\n%s Sheilding HandleEvent\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
 
-    switch (event)
-    {
-        case EVENT_NONE:
-            // Transition back to Idle if no specific event is triggered
-            ChangeState(obj, STATE_IDLE);
-            break;
-        case EVENT_DIE:
-            // Transition to Dead state if a die event is received
-            ChangeState(obj, STATE_DEAD);
-            break;
-            // Ignore Events for other cases
-        case EVENT_MOVE:
-        case EVENT_ATTACK:
-        case EVENT_DEFEND:
-        case EVENT_RESPAWN:
-        case EVENT_COLLISION_START:
-        case EVENT_COLLISION_END:
-        case EVENT_COUNT:
-            break;
-        case EVENT_MOVE_UP:
-            break;
-        case EVENT_MOVE_DOWN:
-            break;
-        case EVENT_MOVE_LEFT:
-            break;
-        case EVENT_MOVE_RIGHT:
-            break;
-        case EVENT_MOVE_UP_RIGHT:
-            break;
-        case EVENT_MOVE_UP_LEFT:
-            break;
-        case EVENT_MOVE_DOWN_RIGHT:
-            break;
-        case EVENT_MOVE_DOWN_LEFT:
-            break;
-        case EVENT_SHIELD:
-            break;
-    }
-}
 
 // Handles events for the Player when in the Die state
 void PlayerDieHandleEvent(GameObject *obj, Event event)
@@ -756,7 +705,7 @@ void PlayerUpdateWalking(GameObject *obj) {
     float moveSpeed = obj->speed;
 
     // Consume stamina while moving
-    const float MOVE_STAMINA_COST = 0.3f;
+    const float MOVE_STAMINA_COST = 0.05f;
     player->stamina -= MOVE_STAMINA_COST;
 
     // If stamina depleted, force return to idle
@@ -949,32 +898,7 @@ void PlayerExitAttacking(GameObject *obj)
     // Reset or adjust any temporary changes during attack, if needed
 }
 
-void PlayerEnterShielding(GameObject *obj)
-{
-    Player *player = (Player *)obj;
-    printf("\n%s -> ENTER -> Sheilding\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-    // Complete the remainder of the method
-    // Example: Deduct some stamina for shielding
-}
-void PlayerUpdateShielding(GameObject *obj)
-{
-    Player *player = (Player *)obj;
-    printf("\n%s -> UPDATE -> Sheilding\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-    // Complete the remainder of the method
-    // Example: Check if the shielding duration is over or if stamina is depleted
-    UpdateAnimation(&obj->animation);
-}
 
-void PlayerExitShielding(GameObject *obj)
-{
-    Player *player = (Player *)obj;
-    printf("\n%s <- EXIT <- Sheilding\n", obj->name);
-    printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-    // Complete the remainder of the method
-    // Reset any temporary shielding effects if necessary
-}
 
 void PlayerEnterDie(GameObject *obj)
 {
@@ -1053,6 +977,9 @@ void PlayerEnterShield(GameObject *obj)
     printf("\n%s -> ENTER -> Shield\n", obj->name);
     printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
 
+    player->shieldColor = (Color){0, 255, 128, 128};
+    player->shieldRadius = 90.0f; // Slightly larger than player
+    player->shieldActive = true;
     Rectangle shieldFrames[8] = {
             {0, 384, 64, 64}, {64, 384, 64, 64}, {128, 384, 64, 64}, {192, 384, 64, 64},
             {256, 384, 64, 64}, {320, 384, 64, 64}, {384, 384, 64, 64}, {448, 384, 64, 64}
@@ -1065,15 +992,34 @@ void PlayerShieldHandleEvent(GameObject *obj, Event event)
     Player *player = (Player *)obj;
     printf("\n%s Shield HandleEvent\n", obj->name);
     printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-    switch (event)
-    {
-        case EVENT_NONE:
+    switch (event) {
+        case EVENT_MOVE_UP:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_DOWN:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_LEFT:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_RIGHT:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_UP_LEFT:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_UP_RIGHT:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_DOWN_LEFT:
+            ChangeState(obj, STATE_IDLE);
+            break;
+        case EVENT_MOVE_DOWN_RIGHT:
             ChangeState(obj, STATE_IDLE);
             break;
         case EVENT_DIE:
             ChangeState(obj, STATE_DEAD);
             break;
-
         default:
             break;
     }
@@ -1087,11 +1033,17 @@ void PlayerUpdateShield(GameObject *obj)
     UpdateAnimation(&obj->animation);
 
     // Consume stamina while shielding
-    player->stamina -= 0.1f;
+    player->stamina -= 0.05f;
     if (player->stamina <= 0)
     {
         ChangeState(obj, STATE_IDLE);
     }
+    DrawCircle(
+            (int)player->base.position.x,
+            (int)player->base.position.y,
+            player->shieldRadius,
+            player->shieldColor
+    );
 }
 
 void PlayerExitShield(GameObject *obj)
@@ -1099,4 +1051,5 @@ void PlayerExitShield(GameObject *obj)
     Player *player = (Player *)obj;
     printf("\n%s <- EXIT <- Shield\n", obj->name);
     printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
+    player->shieldActive = false;
 }

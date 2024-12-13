@@ -18,6 +18,9 @@ typedef struct
     float speed;     //speed of the player at which the player moves
     Vector2 spawnPoint;
     int lives;
+    Color shieldColor;
+    float shieldRadius;
+    bool shieldActive;
 } Player;
 
 // Initialize a new Player with a given name (returns a pointer to the Player)
@@ -55,13 +58,6 @@ void PlayerEnterAttacking(GameObject *obj);  // Called when entering the attacki
 void PlayerUpdateAttacking(GameObject *obj); // Called to update the player's behavior while attacking
 void PlayerExitAttacking(GameObject *obj);   // Called when exiting the attacking state
 
-// Handle events in the shielding state (when the player is defending with a shield)
-void PlayerShieldingHandleEvent(GameObject *obj, Event event);
-
-// State transition functions for shielding state
-void PlayerEnterShielding(GameObject *obj);  // Called when entering the shielding state
-void PlayerUpdateShielding(GameObject *obj); // Called to update the player's behavior while shielding
-void PlayerExitShielding(GameObject *obj);   // Called when exiting the shielding state
 
 // Handle events in the die state (when the player dies)
 void PlayerDieHandleEvent(GameObject *obj, Event event);

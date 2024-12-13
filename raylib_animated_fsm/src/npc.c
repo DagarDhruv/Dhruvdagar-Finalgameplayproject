@@ -426,7 +426,7 @@ void NPCUpdateIdle(GameObject *obj) {
         return;
     }
     // Clamp velocity to maximum of 10f
-    const float MAX_SPEED = 10.0f;
+    const float MAX_SPEED = 5.0f;
     const float SPEED_INCREASE = 1.1f;
 
     // Screen boundary checks with speed increase and clamping

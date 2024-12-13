@@ -148,12 +148,12 @@ void DrawGame(GameData *gameData)
     const char *livesText = TextFormat("%d", gameData->player->lives);
     DrawText("LIVES:", 550, 23, 40, WHITE);
     DrawText(livesText, 690, 23, 40, WHITE);
-    const char *staminaText = TextFormat("%d.0f", gameData->player->stamina);
+/*    const  char *staminaText = TextFormat("%d.0f", gameData->player->stamina);
     DrawText("stamina:", 550, 100, 40, WHITE);
     DrawText(staminaText, 690, 100, 40, WHITE);
     const char *ManaText = TextFormat("%d.0f", gameData->player->mana);
     DrawText("Mana:", 550, 200, 40, WHITE);
-    DrawText(ManaText, 690, 200, 40, WHITE);
+    DrawText(ManaText, 690, 200, 40, WHITE);*/
     // Drawing Player and Position Data˳
 //    const char *infoPosition = TextFormat("(%.f, %.f)", gameData->player->base.position.x, gameData->player->base.position.y);
 
