@@ -175,7 +175,14 @@ void NPCIdleHandleEvent(GameObject *obj, Event event)
     NPC *npc = (NPC *)obj;
     printf("\n%s Idle HandleEvent\n", obj->name);
     printf("Aggression: %d\n\n", npc->aggression);
+    // Get distance to player
+    Vector2 playerPos = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f};
+    float distanceToPlayer = Vector2Distance(obj->position, playerPos);
 
+    // If player moves out of attack range, go back to idle/following
+    if (distanceToPlayer > 50.0f) {
+        ChangeState(obj, STATE_IDLE);
+    }
     switch (event)
     {
     case EVENT_ATTACK:
@@ -213,6 +220,8 @@ void NPCIdleHandleEvent(GameObject *obj, Event event)
         case EVENT_MOVE_LEFT:
             break;
         case EVENT_MOVE_RIGHT:
+            break;
+        case EVENT_SHIELD:
             break;
     }
 }
@@ -262,6 +271,8 @@ void NPCAttackingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
+        case EVENT_SHIELD:
+            break;
     }
 }
 
@@ -310,6 +321,8 @@ void NPCShieldingHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
+        case EVENT_SHIELD:
+            break;
     }
 }
 
@@ -356,6 +369,8 @@ void NPCDeadHandleEvent(GameObject *obj, Event event)
             break;
         case EVENT_MOVE_RIGHT:
             break;
+        case EVENT_SHIELD:
+            break;
     }
 }
 
@@ -386,14 +401,51 @@ void NPCEnterIdle(GameObject *obj)
 }
 
 // Update function for Idle state, called repeatedly during game ticks while in Idle
-void NPCUpdateIdle(GameObject *obj)
-{
-    NPC *npc = (NPC *)obj;
-    printf("%s -> UPDATE -> Idle\n", obj->name);
-    printf("Aggression: %d\n\n", npc->aggression);
-    // During game loop and game ticks, execute Idle state behavior here, such as patrolling or observing.
+void NPCUpdateIdle(GameObject *obj) {
+
+    // Set initial velocity if not moving
+    if (obj->velocity.x == 0 && obj->velocity.y == 0) {
+        obj->velocity.x = obj->speed;
+        obj->velocity.y = obj->speed;
+    }
+
+    // Move NPC
+    obj->position.x += obj->velocity.x;
+    obj->position.y += obj->velocity.y;
+
+    // Clamp velocity to maximum of 10f
+    const float MAX_SPEED = 10.0f;
+    const float SPEED_INCREASE = 1.1f;
+
+    // Screen boundary checks with speed increase and clamping
+    if (obj->position.x <= 0 || obj->position.x >= GetScreenWidth()) {
+        obj->velocity.x *= -1;  // Reverse horizontal direction
+        // Increase speed but clamp to maximum
+        obj->velocity.x = obj->velocity.x * SPEED_INCREASE;
+        if (obj->velocity.x > MAX_SPEED) obj->velocity.x = MAX_SPEED;
+        if (obj->velocity.x < -MAX_SPEED) obj->velocity.x = -MAX_SPEED;
+    }
+
+    if (obj->position.y <= 0 || obj->position.y >= GetScreenHeight()) {
+        obj->velocity.y *= -1;  // Reverse vertical direction
+        // Increase speed but clamp to maximum
+        obj->velocity.y = obj->velocity.y * SPEED_INCREASE;
+        if (obj->velocity.y > MAX_SPEED) obj->velocity.y = MAX_SPEED;
+        if (obj->velocity.y < -MAX_SPEED) obj->velocity.y = -MAX_SPEED;
+    }
+
+    // Update collider position
+    obj->collider.p.x = obj->position.x;
+    obj->collider.p.y = obj->position.y;
+
+
     UpdateAnimation(&obj->animation);
 }
+
+
+
+
+
 
 // Exit function for Idle state, executed once upon leaving Idle
 void NPCExitIdle(GameObject *obj)

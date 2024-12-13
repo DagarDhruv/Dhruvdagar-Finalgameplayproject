@@ -794,7 +794,6 @@ void PlayerUpdateWalking(GameObject *obj) {
 
     // Move player in the determined direction
     PlayerMove(player, moveDirection);
-
     // Update animation frames
     UpdateAnimation(&obj->animation);
 

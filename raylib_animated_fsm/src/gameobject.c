@@ -140,7 +140,7 @@ void HandleCollision(GameObject *lhs, GameObject *rhs)
     lhs->health -= 5; // Example amount
 
     // Change NPC color to visually indicate a collision has occurred
-    rhs->color = RED;
+    rhs->currentState = STATE_ATTACKING;
 
     // Calculate the vector direction from the NPC to the Player
     Vector2 collisionDirection = Vector2Subtract(lhs->position, rhs->position);
