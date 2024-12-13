@@ -13,6 +13,7 @@
  */
 void InitAIManager()
 {
+    srand(time(NULL));
     // Initialize AI
 }
 
@@ -27,8 +28,18 @@ void InitAIManager()
  */
 Command PollAI()
 {
-    // Return a random command
-    return (Command)(rand() % COMMAND_COUNT);
+    int random_state = rand() % 3;
+
+    switch (random_state) {
+        case 0:
+            return COMMAND_ATTACK;
+        case 1:
+            return COMMAND_SHIELD;
+        case 2:
+            return COMMAND_NONE;
+    }
+
+    return COMMAND_NONE;
 }
 
 /**

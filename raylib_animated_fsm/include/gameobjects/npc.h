@@ -59,4 +59,6 @@ void NPCEnterDead(GameObject *obj);
 void NPCUpdateDead(GameObject *obj);
 void NPCExitDead(GameObject *obj);
 
+//Vector2 getPlayerPos(GameData *gameData);
+
 #endif // NPC_H

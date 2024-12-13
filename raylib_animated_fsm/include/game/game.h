@@ -14,6 +14,7 @@ typedef struct
     NPC *npc;           // Pointer to the NPC object
     Mediator *mediator; // Pointer to the Mediator object for managing interactions
                         // Mediator between command and FSM
+    Texture2D backgroundTexture;
 } GameData;
 
 // Initialises the game components (player, npc, mediator)

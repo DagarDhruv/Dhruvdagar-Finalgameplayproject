@@ -23,6 +23,8 @@ void InitGame(GameData *gameData)
     // Create a mediator to facilitate communication between
     // Command and FSM, ultimately updating the playes state
     gameData->mediator = CreateMediator(&gameData->player->base);
+    gameData->backgroundTexture = LoadTexture("assets/background.jpg");
+
 }
 
 /**
@@ -138,24 +140,30 @@ void DrawGame(GameData *gameData)
     BeginDrawing();
 
     // Clear the screen with a white background
-    ClearBackground(DARKGREEN);
+    DrawTexture(gameData->backgroundTexture, -40, 0, WHITE);
 
     // Draw some basic UI text (game title and description)
-    DrawText("Welcome to Raylib Animated FSM Starter", 190, 200, 20, LIGHTGRAY);
-    DrawText("Gameplay Programming I", 190, 220, 20, LIGHTGRAY);
+//    DrawText("Welcome to Raylib Animated FSM Starter", 190, 200, 20, LIGHTGRAY);
+//    DrawText("Gameplay Programming I", 190, 220, 20, LIGHTGRAY)
     const char *livesText = TextFormat("%d", gameData->player->lives);
-    DrawText("LIVES:", 610, 23, 20, DARKBLUE);
-    DrawText(livesText, 690, 23, 20, DARKBLUE);
-    // Drawing Player and Position Data
-    const char *infoPosition = TextFormat("(%.f, %.f)", gameData->player->base.position.x, gameData->player->base.position.y);
+    DrawText("LIVES:", 550, 23, 40, WHITE);
+    DrawText(livesText, 690, 23, 40, WHITE);
+    const char *staminaText = TextFormat("%d.0f", gameData->player->stamina);
+    DrawText("stamina:", 550, 100, 40, WHITE);
+    DrawText(staminaText, 690, 100, 40, WHITE);
+    const char *ManaText = TextFormat("%d.0f", gameData->player->mana);
+    DrawText("Mana:", 550, 200, 40, WHITE);
+    DrawText(ManaText, 690, 200, 40, WHITE);
+    // Drawing Player and Position Data˳
+//    const char *infoPosition = TextFormat("(%.f, %.f)", gameData->player->base.position.x, gameData->player->base.position.y);
 
-    // Draw a circle representing the player at their position
+  /*  // Draw a circle representing the player at their position
     DrawCircleLines(gameData->player->base.position.x, gameData->player->base.position.y, 20, gameData->player->base.color);
     // Draw text showing player position below the player
     DrawText(infoPosition,
              gameData->player->base.position.x - (MeasureText(infoPosition, 20) / 2),
              gameData->player->base.position.y + 30,
-             20, DARKBLUE);
+             20, DARKBLUE);*/
 
     // Drawing Health Bar for the player
     const int healthBarWidth = 100;
@@ -172,19 +180,31 @@ void DrawGame(GameData *gameData)
     // Draw the health bar foreground (green based on current health)
     DrawRectangle(healthBarX, healthBarY, healthBarWidth * healthPercentage, healthBarHeight, GREEN);
 
-    // Drawing NPC and Position Data
-    infoPosition = TextFormat("(%.f, %.f)", gameData->npc->base.position.x, gameData->npc->base.position.y);
+//    // Drawing NPC and Position Data
+//    infoPosition = TextFormat("(%.f, %.f)", gameData->npc->base.position.x, gameData->npc->base.position.y);
+//
+//    // Draw the NPC circle at their position
+//    DrawCircle(gameData->npc->base.position.x, gameData->npc->base.position.y, 20, gameData->npc->base.color);
+//    // Render the npc's animation at their current position
+// Drawing Health Bar for the player
+    const int nhealthBarX = gameData->npc->base.position.x - (healthBarWidth / 2); // Position health bar above the player
+    const int nhealthBarY = gameData->npc->base.position.y - 40;
 
-    // Draw the NPC circle at their position
-    DrawCircle(gameData->npc->base.position.x, gameData->npc->base.position.y, 20, gameData->npc->base.color);
-    // Render the npc's animation at their current position
+    // Calculate health percentage (for drawing the health bar)
+    float nhealthPercentage = (float)gameData->npc->base.health / 100;
+
+    // Draw the background of the health bar (gray)
+    DrawRectangle(nhealthBarX, nhealthBarY, healthBarWidth, healthBarHeight, GRAY);
+
+    // Draw the health bar foreground (green based on current health)
+    DrawRectangle(nhealthBarX, nhealthBarY, healthBarWidth * nhealthPercentage, healthBarHeight, GREEN);
     RenderAnimation(&gameData->npc->base.animation, gameData->npc->base.position, RAYWHITE);
 
-    // Draw text showing NPC position below the NPC
-    DrawText(infoPosition,
-             gameData->npc->base.position.x - (MeasureText(infoPosition, 20) / 2),
-             gameData->npc->base.position.y + 30,
-             20, DARKBLUE);
+//    // Draw text showing NPC position below the NPC
+//    DrawText(infoPosition,
+//             gameData->npc->base.position.x - (MeasureText(infoPosition, 20) / 2),
+//             gameData->npc->base.position.y + 30,
+//             20, DARKBLUE);
 
     // Render the player's animation at their current position
     RenderAnimation(&gameData->player->base.animation, gameData->player->base.position, WHITE);

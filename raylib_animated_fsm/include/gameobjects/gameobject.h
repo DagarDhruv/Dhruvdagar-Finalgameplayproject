@@ -41,6 +41,7 @@ typedef struct GameObject
 
     int health; // The health of the game object
     float speed;
+    State lastDirection;
 } GameObject;
 
 // Initialize a new game object with the given name and default values
@@ -64,6 +65,7 @@ bool CheckCollision(GameObject *lhs, GameObject *rhs);
 
 // Handle Collision
 void HandleCollision(GameObject *lhs, GameObject *rhs);
+void InitShield(GameObject *obj);
 
 // Delete a game object and free associated memory/resources
 void DeleteGameObject(GameObject *obj);

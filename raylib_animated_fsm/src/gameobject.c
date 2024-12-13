@@ -134,23 +134,53 @@ bool CheckCollision(GameObject *lhs, GameObject *rhs)
  * to visually indicate the collision. Additionally, the player is pushed back slightly
  * by a vector calculated along the direction from the NPC to the player.
  */
-void HandleCollision(GameObject *lhs, GameObject *rhs)
-{
-    // Decrease the player's health as a result of the collision
-    lhs->health -= 5; // Example amount
+void HandleCollision(GameObject *lhs, GameObject *rhs) {
+    // Define constants
+    const float ATTACK_RANGE = 50.0f;
+    const float ATTACK_DAMAGE = 10.0f;
 
-    // Change NPC color to visually indicate a collision has occurred
-    rhs->currentState = STATE_ATTACKING;
+    // Calculate distance between objects
+    float distance = Vector2Distance(lhs->position, rhs->position);
 
-    // Calculate the vector direction from the NPC to the Player
-    Vector2 collisionDirection = Vector2Subtract(lhs->position, rhs->position);
+    // Only process collision if within attack range
+    if (distance <= ATTACK_RANGE) {
+        // Handle Player attacking NPC
+        if (lhs->currentState == STATE_ATTACKING) {
+            // Check if NPC is shielding
+            if (rhs->currentState != STATE_SHIELD) {
+                rhs->health -= ATTACK_DAMAGE;
+                rhs->color = RED;
+            }
+        }
 
-    // Normalize the collision direction to a unit vector
-    collisionDirection = Vector2Normalize(collisionDirection);
+        // Handle NPC attacking Player
+        if (rhs->currentState == STATE_ATTACKING) {
+            // Check if Player is shielding
+            if (lhs->currentState != STATE_SHIELD) {
+                lhs->health -= ATTACK_DAMAGE;
+                lhs->color = RED;
+            }
+        }
 
-    // Push the player back slightly along the collision direction
-    lhs->position = Vector2Add(lhs->position, Vector2Scale(collisionDirection, COLLISION_PUSH_BACK));
+        // Calculate push-back direction
+        Vector2 collisionDirection = Vector2Subtract(lhs->position, rhs->position);
+        collisionDirection = Vector2Normalize(collisionDirection);
+
+        // Apply push-back force
+        const float PUSH_FORCE = 5.0f;
+        lhs->position = Vector2Add(lhs->position,
+                                   Vector2Scale(collisionDirection, PUSH_FORCE));
+        rhs->position = Vector2Add(rhs->position,
+                                   Vector2Scale(collisionDirection, -PUSH_FORCE));
+
+        // Update collider positions
+        lhs->collider.p.x = lhs->position.x;
+        lhs->collider.p.y = lhs->position.y;
+        rhs->collider.p.x = rhs->position.x;
+        rhs->collider.p.y = rhs->position.y;
+    }
 }
+
 
 
 /**

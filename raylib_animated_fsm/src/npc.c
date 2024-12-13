@@ -1,4 +1,5 @@
 #include "../include/gameobjects/npc.h"
+#include "include/game/game.h"
 
 /**
  * InitNPC - Initializes a new NPC object with a given name.
@@ -106,7 +107,7 @@ void InitNPCFSM(GameObject *obj)
 
     // ---- STATE_IDLE state configuration ----
     // Define valid transitions from STATE_IDLE
-    State idleValidTransitions[] = {STATE_ATTACKING, STATE_SHIELD, STATE_DEAD};
+    State idleValidTransitions[] = {STATE_ATTACKING, STATE_SHIELD, STATE_DEAD , STATE_IDLE};
 
     // Set up the state configuration for STATE_IDLE
     obj->stateConfigs[STATE_IDLE].name = "NPC_Idle";
@@ -233,7 +234,12 @@ void NPCAttackingHandleEvent(GameObject *obj, Event event)
     printf("\n%s Attacking HandleEvent\n", obj->name);
     printf("Aggression: %d\n\n", npc->aggression);
 
-    switch (event)
+    if (obj->health <= 0) {
+        ChangeState(obj, STATE_DEAD);
+        return;
+    }
+
+        switch (event)
     {
     case EVENT_NONE:
         // Transition back to Idle if no specific event is triggered
@@ -403,6 +409,7 @@ void NPCEnterIdle(GameObject *obj)
 // Update function for Idle state, called repeatedly during game ticks while in Idle
 void NPCUpdateIdle(GameObject *obj) {
 
+//    Vector2 playerPos = getPlayerPos(  );
     // Set initial velocity if not moving
     if (obj->velocity.x == 0 && obj->velocity.y == 0) {
         obj->velocity.x = obj->speed;
@@ -413,6 +420,11 @@ void NPCUpdateIdle(GameObject *obj) {
     obj->position.x += obj->velocity.x;
     obj->position.y += obj->velocity.y;
 
+    // Check for death condition
+    if (obj->health <= 0) {
+        ChangeState(obj, STATE_DEAD);
+        return;
+    }
     // Clamp velocity to maximum of 10f
     const float MAX_SPEED = 10.0f;
     const float SPEED_INCREASE = 1.1f;
@@ -576,3 +588,8 @@ void NPCExitDead(GameObject *obj)
     printf("Aggression: %d\n\n", npc->aggression);
     // Cleanup code for leaving Dead state, such as removing NPC from the active world, playing respawn animations, etc.
 }
+
+//Vector2 getPlayerPos(GameData *gameData)
+//{
+//    return gameData->player->base.position;
+//}

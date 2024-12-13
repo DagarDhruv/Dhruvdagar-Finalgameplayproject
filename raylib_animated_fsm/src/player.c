@@ -661,20 +661,19 @@ void PlayerEnterIdle(GameObject *obj)
     }
 }
 
-void PlayerUpdateIdle(GameObject *obj)
-{
-    // Player *player = (Player *)obj;
-    // printf("\n%s -> UPDATE -> Idle\n", obj->name);
-    // printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
-    //  Complete the remainder of the method
-    UpdateAnimation(&obj->animation);
+void PlayerUpdateIdle(GameObject *obj) {
+    Player *player = (Player *)obj;
 
-    // Check if the animation has finished
-    if (obj->animation.currentFrame == obj->animation.frameCount - 1)
-    {
-        // Transition to a another idle animation
-        SelectRandomIdleAnimation(obj); // Trigger idle animation
-    }
+    // Regenerate stamina and mana while idle
+    const float REGEN_RATE = 0.5f;
+    const float MAX_STAMINA = 100.0f;
+    const float MAX_MANA = 100.0f;
+
+    // Increase stamina and mana
+    player->stamina = fminf(player->stamina + REGEN_RATE, MAX_STAMINA);
+    player->mana = fminf(player->mana + REGEN_RATE, MAX_MANA);
+
+    UpdateAnimation(&obj->animation);
 }
 
 void PlayerExitIdle(GameObject *obj)
@@ -756,6 +755,18 @@ void PlayerUpdateWalking(GameObject *obj) {
     Vector2 moveDirection = {0, 0};
     float moveSpeed = obj->speed;
 
+    // Consume stamina while moving
+    const float MOVE_STAMINA_COST = 0.3f;
+    player->stamina -= MOVE_STAMINA_COST;
+
+    // If stamina depleted, force return to idle
+    if (player->stamina <= 0) {
+        player->stamina = 0;
+        ChangeState(obj, STATE_IDLE);
+        return;
+    }
+
+
     // Determine movement direction based on current state
     switch (obj->currentState) {
         case STATE_MOVING_UP_RIGHT:
@@ -774,37 +785,67 @@ void PlayerUpdateWalking(GameObject *obj) {
             moveDirection.y = moveSpeed/2.0f;
             moveDirection.x = -moveSpeed/2.0f;
             break;
-
         case STATE_MOVING_UP:
             moveDirection.y = -moveSpeed;
+            obj->lastDirection = STATE_MOVING_UP;
             break;
         case STATE_MOVING_DOWN:
             moveDirection.y = moveSpeed;
+            obj->lastDirection = STATE_MOVING_DOWN;
             break;
         case STATE_MOVING_LEFT:
             moveDirection.x = -moveSpeed;
+            obj->lastDirection = STATE_MOVING_LEFT;
             break;
         case STATE_MOVING_RIGHT:
             moveDirection.x = moveSpeed;
+            obj->lastDirection = STATE_MOVING_RIGHT;
             break;
         default:
-            moveDirection.y = -moveSpeed;  // Default upward movement
+            moveDirection.y = -moveSpeed;
             break;
     }
 
     // Move player in the determined direction
     PlayerMove(player, moveDirection);
+
+    // Screen boundary checks
+    const float PLAYER_RADIUS = 32.0f;  // Half of player sprite size
+
+    // Check horizontal boundaries
+    if (obj->position.x < PLAYER_RADIUS) {
+        obj->position.x = PLAYER_RADIUS;
+    }
+    if (obj->position.x > GetScreenWidth() - PLAYER_RADIUS) {
+        obj->position.x = GetScreenWidth() - PLAYER_RADIUS;
+    }
+
+    // Check vertical boundaries
+    if (obj->position.y < PLAYER_RADIUS) {
+        obj->position.y = PLAYER_RADIUS;
+    }
+    if (obj->position.y > GetScreenHeight() - PLAYER_RADIUS) {
+        obj->position.y = GetScreenHeight() - PLAYER_RADIUS;
+    }
+
+    // Update collider position
+    obj->collider.p.x = obj->position.x;
+    obj->collider.p.y = obj->position.y;
+
     // Update animation frames
     UpdateAnimation(&obj->animation);
 
-    if (player->base.health <= 0 || player->base.position.y > GetScreenHeight() + 100) {
+    // Check for death conditions
+    if (player->base.health <= 0) {
         ChangeState(obj, STATE_DEAD);
     }
+
     // Return to idle if animation completes
-    if (obj->animation.currentFrame == obj->animation.frameCount - 1) {
+    if (obj->animation.currentFrame >= obj->animation.frameCount - 1) {
         ChangeState(obj, STATE_IDLE);
     }
 }
+
 
 void PlayerExitWalking(GameObject *obj)
 {
@@ -814,27 +855,70 @@ void PlayerExitWalking(GameObject *obj)
     // Complete the remainder of the method
 }
 
-void PlayerEnterAttacking(GameObject *obj)
-{
-    Player *player = (Player *)obj;
+void PlayerEnterAttacking(GameObject *obj) {
+    Player *player = (Player *) obj;
     printf("\n%s -> ENTER -> Attacking\n", obj->name);
     printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
     // Complete the remainder of the method
     // Example: Deduct some stamina when attacking
 
-    // Attack animation (or other actions as needed)
-    Rectangle attacking[6] = {
-            {0, 2952, 192, 192},   // Frame 1: Row 44, Column 1
-            {192, 2952, 192, 192}, // Frame 2: Row 44, Column 2
-            {384, 2952, 192, 192}, // Frame 3: Row 44, Column 3
-            {576, 2952, 192, 192}, // Frame 4: Row 44, Column 4
-            {768, 2952, 192, 192}, // Frame 5: Row 44, Column 5
-            {960, 2952, 192, 192}  // Frame 6: Row 44, Column 6
+    // Define attack animations for each direction
+    Rectangle attackDown[6] = {
+            {0,   3328, 192, 192},
+            {192, 3328, 192, 192},
+            {384, 3328, 192, 192},
+            {576, 3328, 192, 192},
+            {768, 3328, 192, 192},
+            {960, 3328, 192, 192}
     };
 
-    InitGameObjectAnimation(&player->base, attacking, 6, 0.1f);
-}
+    Rectangle attackUp[6] = {
+            {0,   2994, 192, 192},
+            {192, 2994, 192, 192},
+            {384, 2994, 192, 192},
+            {576, 2994, 192, 192},
+            {768, 2994, 192, 192},
+            {960, 2994, 192, 192}
+    };
 
+// Shield Left Animation
+    Rectangle attackLeft[6] = {
+            {0,   3136, 192, 192},
+            {192, 3136, 192, 192},
+            {384, 3136, 192, 192},
+            {576, 3136, 192, 192},
+            {768, 3136, 192, 192},
+            {960, 3136, 192, 192}
+    };
+
+// Shield Right Animation
+    Rectangle attackRight[6] = {
+            {0,   3520, 192, 192},
+            {192, 3520, 192, 192},
+            {384, 3520, 192, 192},
+            {576, 3520, 192, 192},
+            {768, 3520, 192, 192},
+            {960, 3520, 192, 192}
+    };
+    // Determine attack direction based on last movement
+    switch (player->base.lastDirection) {
+        case STATE_MOVING_UP:
+            InitGameObjectAnimation(&player->base, attackUp, 6, 0.1f);
+            break;
+        case STATE_MOVING_DOWN:
+            InitGameObjectAnimation(&player->base, attackDown, 6, 0.1f);
+            break;
+        case STATE_MOVING_LEFT:
+            InitGameObjectAnimation(&player->base, attackLeft, 6, 0.1f);
+            break;
+        case STATE_MOVING_RIGHT:
+            InitGameObjectAnimation(&player->base, attackRight, 6, 0.1f);
+            break;
+        default:
+            InitGameObjectAnimation(&player->base, attackDown, 6, 0.1f);
+            break;
+    }
+}
 void PlayerUpdateAttacking(GameObject *obj)
 {
     Player *player = (Player *)obj;
@@ -842,6 +926,17 @@ void PlayerUpdateAttacking(GameObject *obj)
     printf("Stamina: %.1f, Mana: %.1f\n\n", player->stamina, player->mana);
     // Complete the remainder of the method
     // Check if the attack should end or be interrupted (e.g., stamina depletion)
+    // Consume mana during attack
+    const float ATTACK_MANA_COST = 1.0f;
+    player->mana -= ATTACK_MANA_COST;
+
+    // If mana depleted, force return to idle
+    if (player->mana <= 0) {
+        player->mana = 0;
+        ChangeState(obj, STATE_IDLE);
+        return;
+    }
+
     UpdateAnimation(&obj->animation);
 }
 
